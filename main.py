@@ -16,11 +16,11 @@ if __name__ == '__main__':
     # 环境清理
     clear()
     # 启动
-    pytest.main(['-s', '-v', '--alluredir=./allure-results', "testcase/"])
+    pytest.main(['-s', '-v','--capture=no', '--alluredir=./allure-results', "testcase/"])
     # 生成报告
     generate_report()
     # 获取报告地址
     url = get_report_url()
     # print("目标网址: ", url)
-    # 钉钉推送
+    # 钉钉推送 todo 优化模块名称
     # send_message_to_ding(url)

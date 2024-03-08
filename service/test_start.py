@@ -2,13 +2,10 @@ from selenium import webdriver
 from testcase.test_cases import *
 from configparser import ConfigParser
 import pytest
+from log import log_info
 
 
-class server(object):
-    # def __init__(self, driver, user, password):
-    #     self.driver = driver
-    #     self.user = user
-    #     self.password = password
+class Server(object):
 
     # @pytest.fixture(scope="session")  # 会话级别的 fixture，只读取一次配置
     def config_read(self):
@@ -16,30 +13,26 @@ class server(object):
         # 读取配置文件
         files_loaded = config.read('conf/config_file.ini')
         if not files_loaded:
-            print("配置文件未能正确加载")
+            log_info("配置文件未能正确加载")
         else:
             try:
-                print(config)
+                log_info("config配置", config)
                 return config
             except KeyError:
-                print("配置文件中填写有误")
+                log_info("配置文件中填写有误")
 
         return None
 
     # 启动服务
     # @pytest.fixture(scope="function")
     def start(self):
+        # 优化成传参
+        # todo 多设备操作
+        equipment = "out"
         arg = self.config_read()
         driver = webdriver.Chrome()
-        url = arg.get("out", "url")
+        url = arg.get(equipment, "url")
+        user = arg.get(equipment, "user")
+        pd = arg.get(equipment, "password")
         driver.get(url)
-        user = arg.get("out", "user")
-        pd = arg.get("out", "password")
-        # a = {"driver": driver, "user": arg["user"], "password": arg["password"]}
-        # # return driver, arg["user"], arg["password"]
         return driver, user, pd
-
-# # 测试函数
-# def test_all(start):
-#     testcases = TestCases()
-#     testcases.test_cases(start)

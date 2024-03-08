@@ -2,6 +2,8 @@ import socket
 import subprocess
 import re
 import os
+import allure
+from log import log_info
 
 
 def get_local_ip():
@@ -30,19 +32,16 @@ def generate_report():
     try:
         # 生成Allure报告
         cmd = "allure generate ./allure-results -o ./reports --clean"
-        res = os.popen(cmd).read()
-        # 打开Allure报告
-        open_cmd = "allure open ./reports"
-        os.popen(open_cmd).read()
-    except:
-        print("报告生成失败")
+        os.popen(cmd)
+    except subprocess.CalledProcessError as e:
+        log_info("报告生成失败：" + str(e))
 
 
 def get_report_url():
     report_url = ""
     ip = get_local_ip()
     port = find_available_port()
-    print("本机ip: ", ip, port, "-------------")
+    log_info("本机ip: ", ip, port, "-------------")
     open_cmd = "allure open -h " + ip + " -p " + str(port) + " ./reports"
     # open_cmd = "allure open -h 100.111.222.14 -p 4001 ./reports"
     # 使用 subprocess 执行命令并获取输出
@@ -51,11 +50,23 @@ def get_report_url():
     while process.poll() is None:
         output = process.stdout.readline()
         if output:
-            print(output.decode("utf-8").strip(), 111)
+            log_info(output.decode("utf-8").strip(), 111)
             url_pattern = r"<(http://[^/]+)/>"
             match = re.search(url_pattern, output.decode("utf-8").strip())
             if match:
                 report_url = match.group(1)
                 break
-
+    process.terminate()
     return report_url
+
+
+def case_name(name):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            with allure.step(name):
+                log_info(name)
+                return func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
