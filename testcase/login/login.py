@@ -24,7 +24,9 @@ test_data = [
 def login_test(driver):
     for data in test_data:
         login(driver, data[0], data[1])
+        # 校验1
         check_box(driver, By.XPATH, '//*[@id="login"]/div[4]/div/div/div/div/button',False)
+
 
 
 def login(driver, user, password):

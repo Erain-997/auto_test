@@ -7,7 +7,7 @@ class TestCases(server):
     # @allure.title("登录行为测试")
     # @pytest.mark.parametrize("driver", [start], indirect=True)  # 使用间接参数化，让 pytest 调用 webdriver fixture
     # @pytest.mark.parametrize("driver,user,password", [start])
-    # @pytest.fixture
+    # @pytest.fixture检查勾选框
     @allure.title("登录行为测试")
     def test_cases(self):
         driver, user, password = self.start()

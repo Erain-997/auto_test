@@ -1,17 +1,26 @@
 import pytest
-import os
 import shutil
+from api.ding import send_message_to_ding
+from api.report import *
 
-# pytest --alluredir=reports
-# allure serve /report
+
+def clear():
+    dir_path = ['./allure-results', './reports']
+    for i in dir_path:
+        if os.path.exists(i):
+            shutil.rmtree(i)
+        os.mkdir(i)
+
+
 if __name__ == '__main__':
-    dir_path = '/allure-results'
-    if os.path.exists(dir_path):
-        print(222222222)
-        shutil.rmtree(dir_path)
-    # os.mkdir(dir_path)
-
+    # 环境清理
+    clear()
+    # 启动
     pytest.main(['-s', '-v', '--alluredir=./allure-results', "testcase/"])
-
-    # driver.implicitly_wait(100)
-    # driver.close()
+    # 生成报告
+    generate_report()
+    # 获取报告地址
+    url = get_report_url()
+    # print("目标网址: ", url)
+    # 钉钉推送
+    # send_message_to_ding(url)
