@@ -1,4 +1,4 @@
-from api.web.common import *
+from api.web import *
 from api.web.assert_tools import *
 
 

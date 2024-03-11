@@ -1,7 +1,7 @@
 from api.report import case_name
 from api.tools import *
 from selenium.webdriver.common.by import By
-from api.web.common import *
+from api.web import *
 from api.web.assert_tools import *
 import pytest
 

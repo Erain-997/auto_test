@@ -2,6 +2,7 @@ import pytest
 import shutil
 from api.ding import send_message_to_ding
 from api.report import *
+from api.ssh import ssh_connect
 
 
 def clear():
@@ -24,3 +25,5 @@ if __name__ == '__main__':
     # print("目标网址: ", url)
     # 钉钉推送 todo 优化模块名称
     # send_message_to_ding(url)
+
+    # ssh_connect("192.168.57.200", "root", "123456")

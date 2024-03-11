@@ -7,6 +7,7 @@ import logging
 from log import log_info
 
 
+# todo 错误截图
 def check_box(driver, by, path, status, name):
     with allure.step(name):
         element = driver.find_element(by, path)
@@ -48,3 +49,8 @@ def check_text(driver, by, path, expect):
             assert fact_text == expect, "校验文本失败,预期:{},实际:{}".format(expect, fact_text)
         except AssertionError:
             pass
+
+
+def check_element_true(driver, by, arg):
+    element = driver.find_element(by, arg)
+    assert element == True, "测试失败"
