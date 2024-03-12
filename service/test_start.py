@@ -6,7 +6,7 @@ from log import log_info
 
 
 class Server(object):
-
+    # todo 设置成环境变量, 第一层
     # @pytest.fixture(scope="session")  # 会话级别的 fixture，只读取一次配置
     def config_read(self):
         config = ConfigParser()

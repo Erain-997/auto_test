@@ -50,7 +50,7 @@ def get_report_url():
     while process.poll() is None:
         output = process.stdout.readline()
         if output:
-            log_info(output.decode("utf-8").strip(), 111)
+            log_info(output.decode("utf-8").strip())
             url_pattern = r"<(http://[^/]+)/>"
             match = re.search(url_pattern, output.decode("utf-8").strip())
             if match:

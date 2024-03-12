@@ -1,6 +1,7 @@
 import itertools
 import string
 import random
+from functools import wraps
 
 
 # 生成杂合字段
@@ -34,3 +35,19 @@ def generate_data_choose(num_combinations):
             combination_length = random.randint(1, 16)  # 可以根据需要调整长度范围
             test_input = ''.join(random.choice(char_type) for _ in range(combination_length))
             print(test_input)
+
+
+def repeated(max_attempts):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            attempts = 0  # 当前尝试次数
+            while attempts < max_attempts:
+                if func(*args, **kwargs):
+                    return
+                attempts += 1
+            print("连续失败超过最大尝试次数，不再执行函数")
+
+        return wrapper
+
+    return decorator

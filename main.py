@@ -3,6 +3,7 @@ import shutil
 from api.ding import send_message_to_ding
 from api.report import *
 from api.ssh import ssh_connect
+from api.telnet import *
 
 
 def clear():
@@ -18,12 +19,15 @@ if __name__ == '__main__':
     clear()
     # 启动
     pytest.main(['-s', '-v','--capture=no', '--alluredir=./allure-results', "testcase/"])
+    time.sleep(2)
     # 生成报告
     generate_report()
+    time.sleep(1)
     # 获取报告地址
     url = get_report_url()
     # print("目标网址: ", url)
+
     # 钉钉推送 todo 优化模块名称
     # send_message_to_ding(url)
 
-    # ssh_connect("192.168.57.200", "root", "123456")
+    # telnet_ls("192.168.57.200", "9900", "root", "1234321")
