@@ -26,6 +26,14 @@ test_data = [
     # ... 可以继续添加更多的测试数据
 ]
 
+@allure.feature("登录模块")
+
+# class TestLogin:
+#     '''
+#     登录
+#     '''
+
+
 
 @allure.step("登录测试")
 def login_test(driver):
@@ -40,7 +48,7 @@ def login_test(driver):
 def login(driver, user, password):
     send_text(driver, By.ID, "login_username", user, "输入用户名: " + user)
     send_text(driver, By.ID, "login_password", password, "输入密码: " + password)
-    res = get_box_status(driver, By.XPATH, '//*[@id="login_remember"]')
+    res = get_box_status(driver, By.XPATH, '//*[@id="login_remember"]',"记住我")
     click(driver, By.XPATH, '//*[@id="login_remember"]', "点击记住我勾选框")
     check_box(driver, By.XPATH, '//*[@id="login_remember"]', not res, "记住我勾选框状态检查,预期{}".format(box_status[not res]))
     click(driver, By.XPATH, "//*[contains(text(), '登 录')]", "点击登录")
@@ -49,22 +57,25 @@ def login(driver, user, password):
 
 
 @allure.step("正确登录-默认不记住我")
-def login_ok(driver, user, password, remember=True):
+def login_ok(driver, user, password, remember=True) -> str:
     clear(driver, By.ID, "login_username")
     send_text(driver, By.ID, "login_username", user, "输入用户名: " + user)
     clear(driver, By.ID, "login_password")
     send_text(driver, By.ID, "login_password", password, "输入密码: " + password)
-    res = get_box_status(driver, By.XPATH, '//*[@id="login_remember"]')
+    res = get_box_status(driver, By.XPATH, '//*[@id="login_remember"]',"记住我")
     if remember and not res:
         click(driver, By.XPATH, '//*[@id="login_remember"]', "点击记住我勾选框")
         check_box(driver, By.XPATH, '//*[@id="login_remember"]', not res, "记住我勾选框状态检查,预期{}".format(box_status[not res]))
     # todo 正则 driver.find_element_by_xpath('//button[contains(.,"Sign in")]')
     click(driver, By.XPATH, "//*[contains(text(), '登 录')]", "点击登录")
     check_element_exist(driver, By.XPATH, "//*[contains(text(), '设备')]", True, "校验登录-预期登录成功")
+    model = get_model(driver, By.XPATH,
+                      "//div[@class='ant-statistic-title' and text()='型号']/following-sibling::div/span[@class='ant-statistic-content-value']")
+    return model
 
 
 @allure.step("退出登录-记住我")
-def login_out_check_remember(driver, user, password, login_end=True):
+def login_out_check_remember(driver):
     click(driver, By.XPATH, '//*[@id="root"]/section/header/div/a', "点击你好")
     click(driver, By.XPATH, '/html/body/div[2]/div/div/ul/li/span', "退出登录")
     time.sleep(1)
@@ -75,7 +86,7 @@ def login_out_check_remember(driver, user, password, login_end=True):
 
 
 @allure.step("退出登录-不记住我")
-def login_out_check_not_remember(driver, user, password, login_end=True):
+def login_out_check_not_remember(driver, user, password):
     click(driver, By.XPATH, '//*[@id="root"]/section/header/div/a', "点击你好")
     click(driver, By.XPATH, '/html/body/div[2]/div/div/ul/li/span', "退出登录")
     time.sleep(1)

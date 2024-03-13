@@ -1,8 +1,11 @@
+import allure_commons
 from selenium import webdriver
 from testcase.test_cases import *
 from configparser import ConfigParser
 import pytest
 from log import log_info
+import allure
+from allure_commons.types import AttachmentType
 
 
 class Server(object):
@@ -28,7 +31,7 @@ class Server(object):
     def start(self):
         # 优化成传参
         # todo 多设备操作
-        equipment = "out"
+        equipment = "in"
         arg = self.config_read()
         driver = webdriver.Chrome()
         url = arg.get(equipment, "url")

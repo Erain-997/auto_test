@@ -47,13 +47,14 @@ def check_element_exist(driver, by, path, states, name):
             else:
                 res = False
             try:
-                assert res, name + "失败,预期:{},实际:{}".format(data[states], data[res])
+                assert res
             except AssertionError:
                 log_info("文本校验失败" + str(element))
-                assert False, "校验{}失败,用例名词:{}".format(path, name)
+                assert res, name + "失败,预期:{},实际:{}".format(data[states], data[res])
         except exceptions.NoSuchElementException:
             if states:
                 log_info("查找元素失败", path)
+                assert res, name + "查找元素失败,path:{}, 预期:{},实际:{}".format(path,data[states], data[res])
             pass
     # element = driver.find_element(by, path)
     # print(element)
@@ -83,3 +84,5 @@ def check_element_true(driver, by, arg):
         assert True, "元素存在, 断言成功"
     else:
         assert False, "元素存在, 用例失败, 预期元素不存在"
+
+
