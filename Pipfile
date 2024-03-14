@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-allure-pytest = "==2.13.2"
+allure-pytest = "*"
 allure-python-commons = "==2.13.2"
 attrs = "==23.2.0"
 bcrypt = "==4.1.2"

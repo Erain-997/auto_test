@@ -13,7 +13,7 @@ def connect_telnet(url, port, username, password):
         print("Telnet连接启动: ", url, port, username, password)
         time.sleep(0.5)
         # 读取登录提示信息
-        tn.read_until(b"login: ")
+        tn.read_until(b"test_login: ")
         # 输入用户名
         tn.write(username.encode('ascii') + b"\n")
         # 读取密码提示信息
