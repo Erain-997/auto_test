@@ -70,17 +70,22 @@ def get_attribute_text(driver, by, path, name) -> str:
             pytest.fail(name + "文本获取失败" + str(e))
 
 
-def click(driver, by, arg, name="点击(默认)"):
+def click(driver, by, path, name="点击(默认)"):
     with allure.step(name):
-        element = driver.find_element(by, arg)
-        if element:
-            element.click()
-        time.sleep(0.5)
+        try:
+            element = WebDriverWait(driver, 3).until(EC.presence_of_element_located((by, path)))
+            if element:
+                element.click()
+            time.sleep(0.5)
+        except TimeoutException as t:
+            allure_attach(driver, path, name + "获取元素失败" + str(t))
 
 
 @case_name("清空文本")
-def clear(driver, by, arg):
-    element = driver.find_element(by, arg)
-    element.send_keys(Keys.CONTROL + "a")  # 全选文本
-    element.send_keys(Keys.BACKSPACE)  # 删除选中的文本
-    time.sleep(0.5)
+def clear(driver, by, path):
+    try:
+        element = WebDriverWait(driver, 3).until(EC.presence_of_element_located((by, path)))
+        element.send_keys(Keys.CONTROL + "a")  # 全选文本
+        element.send_keys(Keys.BACKSPACE)  # 删除选中的文本
+    except TimeoutException as t:
+        allure_attach(driver, path, path + "清空文本失败" + str(t))

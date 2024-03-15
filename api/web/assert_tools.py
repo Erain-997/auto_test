@@ -1,3 +1,4 @@
+import time
 import allure
 import pytest
 from allure_commons.types import AttachmentType
@@ -12,26 +13,31 @@ from test import *
 
 
 def allure_attach(driver, path, fail_text):
-    allure.attach(driver.get_screenshot_as_png(), name=fail_text,
-                  attachment_type=allure.attachment_type.PNG)
-    allure.attach(path, name="xpath路径", attachment_type=allure.attachment_type.TEXT)
+    allure.attach(driver.get_screenshot_as_png(), name=fail_text, attachment_type=allure.attachment_type.PNG)
+    allure.attach(path, name="xpath路径: ", attachment_type=allure.attachment_type.TEXT)
     pytest.fail(fail_text)
 
 
 def check_box(driver, by, path, status, name):
     with allure.step(name):
         try:
-            element = driver.find_element(by, path)
+            element = WebDriverWait(driver, 3).until(EC.presence_of_element_located((by, path)))
             log_info("勾选框校验状态校验成功{},用例:{}".format(element.is_selected() == status, name))
-            assert element.is_selected() == status
-        except AssertionError as e:
-            assert False, name + ", 断言失败, 实际:{}".format(box_status[element.is_selected()])
+            try:
+                assert element.is_selected() == status
+            except AssertionError as e:
+                with allure.step(name + "勾选框状态校验失败"):
+                    allure_attach(driver, path, name + "勾选框状态校验失败" + str(e))
+        except TimeoutException as t:
+            with allure.step(name + "勾选框状态获取失败"):
+                allure_attach(driver, path, name + "勾选框状态获取失败" + str(t))
     #     # 附加截图或其他文件作为结果记录
     # with allure.attach("Calculation Result", "text/plain") as attachment:
     #     attachment.add_file(states, file_name="result.txt", attachment_type=AttachmentType.TEXT)
 
 
 def check_switch(driver, by, path, status, name):
+    time.sleep(1)
     with allure.step(name):
         try:
             switch = WebDriverWait(driver, 3).until(EC.presence_of_element_located((by, path)))
@@ -40,10 +46,10 @@ def check_switch(driver, by, path, status, name):
                 assert is_checked == status
             except AssertionError as e:
                 with allure.step(name + "开关状态校验失败"):
-                    allure_attach(driver, path, name + "文本内容校验失败" + str(e))
+                    allure_attach(driver, path, name + ",开关状态校验失败" + str(e))
         except TimeoutException as t:
             with allure.step(name + "开关状态获取元素失败"):
-                allure_attach(driver, path, name + "开关状态获取元素失败" + str(t))
+                allure_attach(driver, path, name + ",开关状态获取元素失败" + str(t))
 
 
 # 校验元素是否存在

@@ -11,8 +11,5 @@ def update_system(driver):
 
 @allure.step("设备信息校验")
 def check_information(driver):
-    res=get_attribute_text(driver, By.XPATH, '//*[@id="root"]//div[1]/div[1]/div[2]/div[1]/div')
-    print(datetime.now(),": ",res,"-----------")
-
-
-
+    res = get_attribute_text(driver, By.XPATH, '//*[@id="root"]//div[1]/div[1]/div[2]/div[1]/div')
+    print(datetime.now(), ": ", res, "-----------")
