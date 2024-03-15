@@ -46,9 +46,6 @@ def driver(request):
     return driver_instance
 
 
-
-
-
 # 启动服务
 def start():
     # 优化成传参

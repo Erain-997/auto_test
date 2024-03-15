@@ -7,6 +7,7 @@ from test.start import *
 from test import box_status
 from test.login import *
 
+
 test_data = [
     (generate_data_all(6), generate_data_all(6), False),  # 随机整合数据
     ("user1", "wrongpass", False),  # 错误的密码
@@ -30,6 +31,7 @@ class TestLogin:
     # @pytest.mark.usefixtures("driver")
 
     @allure.story("正确登录-默认勾选记住")
+    # @pytest.mark.flaky(reruns=3, reruns_delay=2)  # 添加重试装饰器
     def test_login_right(self, driver, url, user, password):
         start_case(driver, url)
         login_right(driver, user, password)

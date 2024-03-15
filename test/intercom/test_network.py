@@ -19,6 +19,7 @@ class TestLogin:
         # todo 没加保存, 保存后丢失目标
 
     @allure.story("网络-云平台")
+    # @pytest.mark.flaky(reruns=3, reruns_delay=2)  # 添加重试装饰器
     def test_network_cloud(self, driver, url, user, password):
         start_case(driver, url)
         model = login_right(driver, user, password)
