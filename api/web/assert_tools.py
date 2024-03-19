@@ -1,3 +1,4 @@
+import base64
 import time
 import allure
 import pytest
@@ -18,6 +19,41 @@ def allure_attach(driver, path, fail_text):
     pytest.fail(fail_text)
 
 
+# todo 拼接失败, 取多次上传
+def capture_full_page_screenshot(driver, full=True):
+    # 获取网页内容高度
+    page_height = driver.execute_script("return document.body.scrollHeight")
+    # # 设置浏览器窗口大小与网页内容高度一致
+    # driver.set_window_size(driver.get_window_size()['width'], page_height)
+    # 初始化截图列表
+    screenshots = []
+    # full_screenshot = b''
+    # 计算滚动步长
+    scroll_step = driver.get_window_size()['height']
+    # 滚动窗口并截取每个视图的截图
+    for y in range(0, page_height, scroll_step):
+        time.sleep(0.5)
+        # 滚动窗口
+        driver.execute_script("window.scrollTo(0, {});".format(y))
+        # 等待页面滚动完成
+        time.sleep(0.5)
+        # 截取当前视图的截图
+        # screenshot = driver.get_screenshot_as_png()
+        # screenshots.append(screenshot)
+
+        allure.attach(driver.get_screenshot_as_png(), name=str(scroll_step), attachment_type=allure.attachment_type.PNG)
+        if not full:
+            return
+            # full_screenshot += driver.get_screenshot_as_png()
+    # 创建完整截图
+    # full_screenshot = b''.join(screenshots)
+    # 将长图转换为 Base64 编码
+    # screenshot_base64 = base64.b64encode(full_screenshot).decode('utf-8')
+    # allure.attach(full_screenshot, name=str(page_height + 100), attachment_type=allure.attachment_type.PNG)
+
+    # return full_screenshot
+
+
 def check_box(driver, by, path, status, name):
     with allure.step(name):
         try:
@@ -31,13 +67,22 @@ def check_box(driver, by, path, status, name):
         except TimeoutException as t:
             with allure.step(name + "勾选框状态获取失败"):
                 allure_attach(driver, path, name + "勾选框状态获取失败" + str(t))
-    #     # 附加截图或其他文件作为结果记录
-    # with allure.attach("Calculation Result", "text/plain") as attachment:
-    #     attachment.add_file(states, file_name="result.txt", attachment_type=AttachmentType.TEXT)
+
+
+def check_save_success(driver, name):
+    with allure.step(name):
+        try:
+            WebDriverWait(driver, 5).until(
+                EC.presence_of_element_located((By.XPATH, "//*[contains(text(), '保存成功')]")))
+        except TimeoutException as t:
+            with allure.step(name + "没弹出保存成功Tips, 请检查"):
+                allure_attach(driver, "//*[contains(text(), '保存成功')]", name + ",保存成功Tips状态获取元素失败" + str(t))
+
+        capture_full_page_screenshot(driver,False)
 
 
 def check_switch(driver, by, path, status, name):
-    time.sleep(1)
+    # time.sleep(1)
     with allure.step(name):
         try:
             switch = WebDriverWait(driver, 3).until(EC.presence_of_element_located((by, path)))
@@ -50,6 +95,8 @@ def check_switch(driver, by, path, status, name):
         except TimeoutException as t:
             with allure.step(name + "开关状态获取元素失败"):
                 allure_attach(driver, path, name + ",开关状态获取元素失败" + str(t))
+        # 截图
+        capture_full_page_screenshot(driver)
 
 
 # 校验元素是否存在

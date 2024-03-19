@@ -1,4 +1,7 @@
 import json
+import os
+import re
+
 import requests
 
 
@@ -178,3 +181,63 @@ def api_set_sip_switch_configuration(url, session_id, sip_enable: bool):
 
     response = requests.request("POST", url + api_path, headers=headers, data=payload)
     print(response.text)
+
+
+def api_capture_pcap_start(url, session_id):
+    """
+    :param url:
+    :param session_id:
+    :return:
+    """
+    api_path = "/cgi-bin/webapi.cgi?api=capture"
+
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Cookie': "SessionID=" + session_id
+    }
+
+    response = requests.request("POST", url + api_path, headers=headers, data={"action": "1"})
+
+    # 解析 JSON 数据
+    response_json = json.loads(response.text)
+    return response_json
+
+
+def api_capture_pcap_end(url, session_id):
+    """
+    :param url:
+    :param session_id:
+    :return:
+    """
+    api_path = "/cgi-bin/webapi.cgi?api=capture"
+
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+        'Cookie': "SessionID=" + session_id
+    }
+    response = requests.request("POST", url + api_path, headers=headers, data={"action": "0"})
+    # 解析 JSON 数据
+    response_json = json.loads(response.text)
+    return response_json
+
+
+def api_download_pcap(url, session_id, name):
+    """
+    :param url:
+    :param session_id:
+    :return:
+    """
+    # api_path = "/data/packet.pcap"
+    headers = {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Cookie': "SessionID=" + session_id
+    }
+    response = requests.get(url + name, headers=headers, stream=True)
+    pcapname = filename = re.search(r'[^/]+$', name).group(0)
+    save_path = os.path.expanduser('~/Desktop/' + pcapname)
+    with open(save_path, 'wb') as file:
+        for chunk in response.iter_content(chunk_size=8192):
+            if chunk:
+                file.write(chunk)
+
+    print("抓包成功:", '~/Desktop/' + pcapname)

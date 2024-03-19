@@ -2,11 +2,13 @@ from api.web import *
 from api.web.assert_tools import *
 from test import *
 from test.start import *
+import pytest
 
 
 @allure.feature("对讲设置-网络")
+@allure.description("网络测试")
 @pytest.mark.parametrize("url, user, password", start())
-class TestLogin:
+class TestNetwork:
     @allure.story("dhcp设置")
     def network_dhcp(self):
         driver, user, password = start()
@@ -19,7 +21,9 @@ class TestLogin:
         # todo 没加保存, 保存后丢失目标
 
     @allure.story("网络-云平台")
-    # @pytest.mark.flaky(reruns=3, reruns_delay=2)  # 添加重试装饰器
+    # @pytest.mark.flaky  # 添加重试装饰器
+    @retry(max_retries=3, delay=2)
+    @allure.title("云平台启用和关闭,测试设备:{url}")
     def test_network_cloud(self, driver, url, user, password):
         start_case(driver, url)
         model = login_right(driver, user, password)
@@ -30,8 +34,10 @@ class TestLogin:
         click(driver, By.XPATH, "(//*[contains(text(), '网络')])[2]", "点击网络")
         res = get_switch_status(driver, By.XPATH, '//*[@id="cloud_enable"]', "云服务")
         click(driver, By.XPATH, '//*[@id="cloud_enable"]', "当前:{},点击云服务按钮".format(switch_status[res]))
-        click(driver, By.XPATH, "(//*[contains(text(), '保存')])[3]", "保存,当前云服务状态:".format(switch_status[not res]))
-        check_switch(driver, By.XPATH, '//*[@id="network_dhcp"]', not res,
+        click(driver, By.XPATH, "(//*[contains(text(), '保存')])[3]", "保存,当前云服务状态:{}".format(switch_status[not res]))
+        check_save_success(driver, "云平台开关切换成功")
+        check_switch(driver, By.XPATH, '//*[@id="cloud_enable"]', not res,
                      "云平台开关按钮状态检查,预期{}".format(switch_status[not res]))
 
+        logout_right(driver)
         driver.close()

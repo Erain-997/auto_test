@@ -30,7 +30,12 @@ def config_read():
 def driver(request):
     # 在每个测试用例之前创建一个新的driver对象
     driver_instance = webdriver.Chrome()
-
+    # 创建 Chrome Options 对象
+    options = webdriver.ChromeOptions()
+    # 最大化浏览器窗口
+    options.add_argument("--start-maximized")
+    # 将 Options 对象传递给 WebDriver
+    driver_instance = webdriver.Chrome(options=options)
     # 添加一个finalizer，确保每个测试用例结束后关闭当前标签页
     def close_tab():
         try:

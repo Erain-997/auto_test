@@ -21,5 +21,27 @@ def login_right(driver, user, password) -> str:
 
 
 def logout_right(driver):
+    time.sleep(2)
     click(driver, By.XPATH, '//*[@id="root"]/section/header/div/a', "点击你好")
-    click(driver, By.XPATH, '/html/body/div[2]/div/div/ul/li/span', "退出登录")
+    # time.sleep(200)
+    click(driver, By.XPATH, "//*[contains(text(), '登出')]", "退出登录")
+    # click(driver, By.XPATH, '/html/body//div/div/ul/li/span', "退出登录")
+
+import time
+import functools
+
+def retry(max_retries, delay=0):
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            retries = 0
+            while retries < max_retries:
+                try:
+                    return func(*args, **kwargs)
+                except AssertionError:
+                    if delay > 0:
+                        time.sleep(delay)
+                    retries += 1
+            return func(*args, **kwargs)  # Final attempt without catching AssertionError
+        return wrapper
+    return decorator
