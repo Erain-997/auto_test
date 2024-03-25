@@ -1,11 +1,10 @@
 from api.tools import *
-from api.web import *
-from api.web.assert_tools import *
 
 # 准备各种符号和数据组合的测试数据
 from test.start import *
 from test import box_status
 from test.login import *
+from test.common import login_right,logout_right
 
 
 test_data = [
@@ -28,10 +27,7 @@ test_data = [
 @pytest.mark.parametrize("url, user, password", start())
 class TestLogin:
     # @allure.severity(allure.severity_level.CRITICAL)
-    # @pytest.mark.usefixtures("driver")
-
     @allure.story("正确登录-默认勾选记住")
-    # @pytest.mark.flaky(reruns=3, reruns_delay=2)  # 添加重试装饰器
     def test_login_right(self, driver, url, user, password):
         start_case(driver, url)
         login_right(driver, user, password)
@@ -133,5 +129,7 @@ class TestLogin:
         check_text(driver, By.XPATH, '//*[@id="root"]//li[1]//span[2]', "General")
 
         # 恢复环境
+        click(driver, By.XPATH, '//*[@id="root"]/section/header//button/span[2]', "点击语言")
+        click(driver, By.XPATH, '/html/body/div[2]//ul/li[1]/span', "切换成中文")
         logout_right(driver)
         driver.close()

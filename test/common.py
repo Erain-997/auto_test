@@ -1,4 +1,4 @@
-from api.web import *
+from api.web.func import *
 from api.web.assert_tools import *
 # 准备各种符号和数据组合的测试数据
 from test.start import *

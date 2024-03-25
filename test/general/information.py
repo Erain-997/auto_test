@@ -2,6 +2,7 @@ from datetime import datetime
 
 from api.web import *
 from api.web.assert_tools import *
+from api.web.func import click, get_attribute_text
 
 
 @allure.step("升级系统")

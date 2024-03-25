@@ -1,29 +1,32 @@
-from api.web import *
-from api.web.assert_tools import *
-from test import *
-from test.start import *
+import allure
 import pytest
+from selenium.webdriver.common.by import By
+
+from test import model_network_cloud, switch_status
+from test.common import login_right, logout_right
+from test.start import *
 
 
 @allure.feature("对讲设置-网络")
 @allure.description("网络测试")
 @pytest.mark.parametrize("url, user, password", start())
 class TestNetwork:
-    @allure.story("dhcp设置")
-    def network_dhcp(self):
-        driver, user, password = start()
-        click(driver, By.XPATH, '//*[@id="root"]//li[1]//span[2]', "点击收起常规设置")
-        click(driver, By.XPATH, '//*[@id="root"]//li[2]//span[2]', "点击安防管理")
-        click(driver, By.XPATH, "(//*[contains(text(), '网络')])[2]", "点击网络")
-        res = get_switch_status(driver, By.XPATH, '//*[@id="network_dhcp"]', "dhcp")
-        click(driver, By.XPATH, '//*[@id="network_dhcp"]', "点击dhcp按钮")
-        res = get_switch_status(driver, By.XPATH, '//*[@id="network_dhcp"]', "dhcp")
-        # todo 没加保存, 保存后丢失目标
+    # @allure.story("dhcp设置")
+    # def network_dhcp(self):
+    #     driver, user, password = start()
+    #     click(driver, By.XPATH, '//*[@id="root"]//li[1]//span[2]', "点击收起常规设置")
+    #     click(driver, By.XPATH, '//*[@id="root"]//li[2]//span[2]', "点击安防管理")
+    #     click(driver, By.XPATH, "(//*[contains(text(), '网络')])[2]", "点击网络")
+    #     res = get_switch_status(driver, By.XPATH, '//*[@id="network_dhcp"]', "dhcp")
+    #     click(driver, By.XPATH, '//*[@id="network_dhcp"]', "点击dhcp按钮")
+    #     res = get_switch_status(driver, By.XPATH, '//*[@id="network_dhcp"]', "dhcp")
+    #     # todo 没加保存, 保存后丢失目标
 
     @allure.story("网络-云平台")
     @allure.title("云平台启用和关闭,测试设备:{url}")
     def test_network_cloud(self, driver, url, user, password):
         start_case(driver, url)
+        print("-----------------------------------")
         model = login_right(driver, user, password)
         if model not in model_network_cloud:
             allure.step("当前型号{},没有网络-云平台功能".format(model))

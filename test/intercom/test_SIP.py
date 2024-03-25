@@ -1,7 +1,8 @@
 from api.web import *
 from api.web.assert_tools import *
-from test import *
+from test.common import *
 from test.start import *
+from test import switch_status
 
 
 @allure.feature("对讲设置-SIP")

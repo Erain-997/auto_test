@@ -1,5 +1,6 @@
 from api.web import *
 from api.web.assert_tools import *
+from api.web.func import click
 
 
 @allure.step("升级系统")

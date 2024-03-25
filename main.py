@@ -3,7 +3,6 @@ import shutil
 from api.ding import send_message_to_ding
 from api.http.state import api_sip_registration_status
 from api.report import *
-from api.ssh import ssh_connect
 from api.telnet import *
 from test_api.test_call import TestApi
 
