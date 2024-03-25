@@ -1,3 +1,5 @@
+from test.common import logout_right
+
 switch_status = {True: "开启状态", False: "关闭状态"}
 box_status = {True: "勾选状态", False: "未勾选状态"}
 
@@ -6,19 +8,18 @@ model_network_cloud = ["H618"]
 
 import allure
 from functools import wraps
+import pytest
 
 
-def handle_failure(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except AssertionError as e:
-            driver = args[0]
-            with allure.step("{} 用例失败".format(func.__name__)):
-                allure.attach(driver.get_screenshot_as_png(), name="失败截图", attachment_type=allure.attachment_type.PNG)
-                allure.attach(str(e), name="失败原因", attachment_type=allure.attachment_type.TEXT)
-            # 执行其他操作，例如记录日志等
-            pass
+# 定义清理函数
+def cleanup(driver):
+    logout_right(driver)
+    driver.close()
 
-    return wrapper
+
+# 注册 pytest_runtest_protocol 钩子函数
+def pytest_runtest_protocol(driver):
+    # 运行下一个测试用例之前执行清理函数
+    cleanup(driver)
+
+    return None

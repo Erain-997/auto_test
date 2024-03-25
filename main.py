@@ -23,7 +23,7 @@ if __name__ == '__main__':
     # # 启动
     pytest.main(
         ['-s', '-v', '--capture=no', "--continue-on-collection-errors", '--alluredir=./allure-results',
-         "test/intercom/"])
+         "test/", "--reruns", "0"])
     time.sleep(2)
     # 生成报告
     generate_report()

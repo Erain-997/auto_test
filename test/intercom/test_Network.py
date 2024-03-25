@@ -21,8 +21,6 @@ class TestNetwork:
         # todo 没加保存, 保存后丢失目标
 
     @allure.story("网络-云平台")
-    # @pytest.mark.flaky  # 添加重试装饰器
-    @retry(max_retries=3, delay=2)
     @allure.title("云平台启用和关闭,测试设备:{url}")
     def test_network_cloud(self, driver, url, user, password):
         start_case(driver, url)

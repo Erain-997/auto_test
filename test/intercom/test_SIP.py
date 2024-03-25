@@ -8,7 +8,6 @@ from test.start import *
 @pytest.mark.parametrize("url, user, password", start())
 class TestSIP:
     @allure.story("SIP开关按钮")
-    # @pytest.mark.flaky(reruns=3, reruns_delay=2)  # 添加重试装饰器
     def test_SIP(self, driver, url, user, password):
         start_case(driver, url)
         model = login_right(driver, user, password)
