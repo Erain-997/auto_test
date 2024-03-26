@@ -1,3 +1,5 @@
+import re
+
 import allure_commons
 from selenium import webdriver
 from selenium.common import NoSuchWindowException
@@ -36,6 +38,7 @@ def driver(request):
     options.add_argument("--start-maximized")
     # 将 Options 对象传递给 WebDriver
     driver_instance = webdriver.Chrome(options=options)
+
     # 添加一个finalizer，确保每个测试用例结束后关闭当前标签页
     def close_tab():
         try:
@@ -57,18 +60,17 @@ def start():
     # todo 多设备操作
     equipment = "out"
     arg = config_read()
-    url = arg.get(equipment, "url")
+    ip = arg.get(equipment, "ip")
     user = arg.get(equipment, "user")
     pd = arg.get(equipment, "password")
-    # driver = webdriver.Chrome()
-    # driver.get(url)
 
-    # log_info("sessionID", driver.session_id)
-    return [(url, user, pd)]
+    return [(ip, user, pd)]
 
 
-# @pytest.fixture(scope="function")
-def start_case(driver, url):
+def start_case(driver, ip):
+    # ip_pattern = r'\b(?:\d{1,3}\.){3}\d{1,3}\b'
+    # ip_addresses = re.findall(ip_pattern, url)
+    telnet_reset_login(ip, 9900, 'root', "1234321")
     # todo 可能有用
     # driver = webdriver.Remote(command_executor=url, desired_capabilities={}, session_id=session_id)
     # 切换到其他窗口后执行JavaScript脚本
@@ -79,4 +81,5 @@ def start_case(driver, url):
     # 切换到新打开的标签页
     driver.switch_to.window(driver.window_handles[-1])
     # 在新标签页中进行操作，例如访问某个网页
-    driver.get(url)
+
+    driver.get("http://"+ip)

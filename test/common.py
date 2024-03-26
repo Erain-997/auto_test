@@ -1,3 +1,4 @@
+from api.telnet import telnet_reset_login
 from api.web.func import *
 from api.web.assert_tools import *
 # 准备各种符号和数据组合的测试数据
@@ -6,6 +7,7 @@ from test.login import *
 
 
 def login_right(driver, user, password) -> str:
+
     # todo 正则优化
     clear(driver, By.ID, "login_username")
     send_text(driver, By.ID, "login_username", user, "输入用户名: " + user)

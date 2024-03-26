@@ -22,7 +22,7 @@ def connect_telnet(url, port, username, password):
         tn.write(password.encode('ascii') + b"\n")
         return tn
     except Exception as e:
-        print("Telnet连接出错:", str(e))
+        print("Telnet连接出错:", url, port, username, password, str(e))
         return None
 
 
@@ -54,12 +54,26 @@ def execute_command(tn, command):
     except Exception as e:
         print("命令执行出错:", str(e))
 
+
 # todo demo test
 def telnet_ls(url, port, username, password):
     tn = connect_telnet(url, port, username, password)
     if tn:
         # 执行命令
         execute_command(tn, "ls")
+        # 关闭 Telnet 连接
+        tn.close()
+    else:
+        print("Telnet连接失败")
+
+
+def telnet_reset_login(url, port, username, password):
+    tn = connect_telnet(url, port, username, password)
+    if tn:
+        # 执行命令
+        execute_command(tn, "killall mini_httpd;/var/bin/mini_httpd -T utf-8 -u root -d /var/httpd -c **.cgi &")
+        # execute_command(tn, "killall mini_httpd;/dnake/bin/mini_httpd -T utf-8 -u root -d /dnake/httpd -c **.cgi &")
+        print("Telnet重置登录")
         # 关闭 Telnet 连接
         tn.close()
     else:

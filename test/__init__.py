@@ -5,6 +5,8 @@ box_status = {True: "勾选状态", False: "未勾选状态"}
 
 # 型号功能差异
 model_network_cloud = ["H618"]
+# 呼叫功能
+model_call = ["S615"]
 
 import allure
 from functools import wraps

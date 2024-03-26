@@ -2,15 +2,12 @@ import base64
 import time
 import allure
 import pytest
-from allure_commons.types import AttachmentType
 from selenium.common import exceptions
-import logging
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from log import log_info
-from selenium.common import NoSuchElementException, TimeoutException
-from test import *
+from selenium.common import  TimeoutException
 
 
 def allure_attach(driver, path, fail_text):

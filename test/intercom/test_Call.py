@@ -1,20 +1,23 @@
 from api.web import *
 from api.web.assert_tools import *
 from test import *
+from test.common import login_right
 from test.start import *
 
 
 @allure.feature("对讲设置-呼叫")
-@pytest.mark.parametrize("url, user, password", start())
+@pytest.mark.parametrize("ip, user, password", start())
 class TestCall:
+
     @allure.story("高级-聋哑模式")
     @allure.description("web端验证聋哑模式的开启/关闭状态")
-    def test_deaf(self, driver, url, user, password):
-        start_case(driver, url)
+    def test_deaf(self, driver, ip, user, password):
+
+        start_case(driver, ip)
         model = login_right(driver, user, password)
-        # if model not in model_network_cloud:
-        #     allure.step("当前型号{},没有网络-云平台功能".format(model))
-        #     return
+        if model not in model_call:
+            allure.step("当前型号{},没有聋哑模式功能".format(model))
+            return
         click(driver, By.XPATH, "//*[contains(text(), '对讲设置')]", "点击对讲设置")
         click(driver, By.XPATH, "//*[contains(text(), '呼叫')]", "点击呼叫")
         res = get_switch_status(driver, By.XPATH, '//*[@id="advanced_deaf"]', "聋哑模式")
@@ -29,12 +32,12 @@ class TestCall:
 
     @allure.story("高级-摄像头")
     @allure.description("web端验证摄像头的开启/关闭状态")
-    def test_camera(self, driver, url, user, password):
-        start_case(driver, url)
+    def test_camera(self, driver, ip, user, password):
+        start_case(driver, ip)
         model = login_right(driver, user, password)
-        # if model not in model_network_cloud:
-        #     allure.step("当前型号{},没有网络-云平台功能".format(model))
-        #     return
+        if model not in model_call:
+            allure.step("当前型号{},没有摄像头功能".format(model))
+            return
         click(driver, By.XPATH, "//*[contains(text(), '对讲设置')]", "点击对讲设置")
         click(driver, By.XPATH, "//*[contains(text(), '呼叫')]", "点击呼叫")
         res = get_switch_status(driver, By.XPATH, '//*[@id="advanced_camera"]', "摄像头")

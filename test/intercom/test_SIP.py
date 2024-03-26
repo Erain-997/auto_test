@@ -6,11 +6,11 @@ from test import switch_status
 
 
 @allure.feature("对讲设置-SIP")
-@pytest.mark.parametrize("url, user, password", start())
+@pytest.mark.parametrize("ip, user, password", start())
 class TestSIP:
     @allure.story("SIP开关按钮")
-    def test_SIP(self, driver, url, user, password):
-        start_case(driver, url)
+    def test_SIP(self, driver, ip, user, password):
+        start_case(driver, ip)
         model = login_right(driver, user, password)
         # if model not in model_network_cloud:
         #     allure.step("当前型号{},没有网络-云平台功能".format(model))

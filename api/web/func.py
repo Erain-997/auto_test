@@ -1,13 +1,8 @@
-import time
-import allure
-import pytest
-from selenium.common import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from api.report import case_name
-from api.web.assert_tools import allure_attach
-from log import log_info
+from api.web.assert_tools import *
 
 
 def get_model(driver, by, path):

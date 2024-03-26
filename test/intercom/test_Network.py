@@ -9,7 +9,7 @@ from test.start import *
 
 @allure.feature("对讲设置-网络")
 @allure.description("网络测试")
-@pytest.mark.parametrize("url, user, password", start())
+@pytest.mark.parametrize("ip, user, password", start())
 class TestNetwork:
     # @allure.story("dhcp设置")
     # def network_dhcp(self):
@@ -23,10 +23,9 @@ class TestNetwork:
     #     # todo 没加保存, 保存后丢失目标
 
     @allure.story("网络-云平台")
-    @allure.title("云平台启用和关闭,测试设备:{url}")
-    def test_network_cloud(self, driver, url, user, password):
-        start_case(driver, url)
-        print("-----------------------------------")
+    @allure.title("云平台启用和关闭,测试设备:{ip}")
+    def test_network_cloud(self, driver, ip, user, password):
+        start_case(driver, ip)
         model = login_right(driver, user, password)
         if model not in model_network_cloud:
             allure.step("当前型号{},没有网络-云平台功能".format(model))
