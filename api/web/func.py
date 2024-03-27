@@ -72,6 +72,7 @@ def click(driver, by, path, name="点击(默认)"):
             if element:
                 element.click()
             time.sleep(0.5)
+            return element
         except TimeoutException as t:
             allure_attach(driver, path, name + "获取元素失败" + str(t))
 

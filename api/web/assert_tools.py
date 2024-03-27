@@ -7,7 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from log import log_info
-from selenium.common import  TimeoutException
+from selenium.common import TimeoutException
 
 
 def allure_attach(driver, path, fail_text):
@@ -75,7 +75,7 @@ def check_save_success(driver, name):
             with allure.step(name + "没弹出保存成功Tips, 请检查"):
                 allure_attach(driver, "//*[contains(text(), '保存成功')]", name + ",保存成功Tips状态获取元素失败" + str(t))
 
-        capture_full_page_screenshot(driver,False)
+        capture_full_page_screenshot(driver, False)
 
 
 def check_switch(driver, by, path, status, name):
@@ -97,24 +97,30 @@ def check_switch(driver, by, path, status, name):
 
 
 # 校验元素是否存在
-def check_element_exist(driver, by, path, states, name):
-    data = {True: "存在", False: "不存在"}
+def check_element_exist(driver, by, path, name):
     with allure.step(name):
         try:
-            element = driver.find_element(by, path)
-            if element:
-                res = True
-            else:
-                res = False
-            try:
-                assert res
-            except AssertionError:
-                log_info("元素校验失败" + str(element))
-                assert res, name + "失败,预期:{},实际:{}".format(data[states], data[res])
-        except exceptions.NoSuchElementException:
-            if states:
-                log_info("查找元素失败", path)
-                assert res, name + "查找元素失败,path:{}, 预期:{},实际:{}".format(path, data[states], data[res])
+            WebDriverWait(driver, 3).until(EC.presence_of_element_located((by, path)))
+        except TimeoutException as t:
+            allure_attach(driver, path, name + "获取元素失败" + str(t))
+
+    # data = {True: "存在", False: "不存在"}
+    # with allure.step(name):
+    #     try:
+    #         element = driver.find_element(by, path)
+    #         if element:
+    #             res = True
+    #         else:
+    #             res = False
+    #         try:
+    #             assert res
+    #         except AssertionError:
+    #             log_info("元素校验失败" + str(element))
+    #             assert res, name + "失败,预期:{},实际:{}".format(data[states], data[res])
+    #     except exceptions.NoSuchElementException:
+    #         if states:
+    #             log_info("查找元素失败", path)
+    #             assert res, name + "查找元素失败,path:{}, 预期:{},实际:{}".format(path, data[states], data[res])
 
 
 # 校验文本
