@@ -11,13 +11,15 @@ class TestCall:
 
     @allure.story("高级-聋哑模式")
     @allure.description("web端验证聋哑模式的开启/关闭状态")
+    @allure.title("[web]设置聋哑模式")
     def test_deaf(self, driver, ip, user, password):
 
         start_case(driver, ip)
         model = login_right(driver, user, password)
         if model not in model_call:
-            allure.step("当前型号{},没有聋哑模式功能".format(model))
-            return
+            with allure.step("当前型号{},没有聋哑模式功能".format(model)):
+                pytest.skip("当前型号{},没有聋哑模式功能".format(model))
+                return
         click(driver, By.XPATH, "//*[contains(text(), '对讲设置')]", "点击对讲设置")
         click(driver, By.XPATH, "//*[contains(text(), '呼叫')]", "点击呼叫")
         res = get_switch_status(driver, By.XPATH, '//*[@id="advanced_deaf"]', "聋哑模式")
@@ -32,11 +34,13 @@ class TestCall:
 
     @allure.story("高级-摄像头")
     @allure.description("web端验证摄像头的开启/关闭状态")
+    @allure.title("[web]设置摄像头")
     def test_camera(self, driver, ip, user, password):
         start_case(driver, ip)
         model = login_right(driver, user, password)
         if model not in model_call:
-            allure.step("当前型号{},没有摄像头功能".format(model))
+            with allure.step("当前型号{},没有摄像头功能".format(model)):
+                pytest.skip("当前型号{},没有摄像头功能".format(model))
             return
         click(driver, By.XPATH, "//*[contains(text(), '对讲设置')]", "点击对讲设置")
         click(driver, By.XPATH, "//*[contains(text(), '呼叫')]", "点击呼叫")

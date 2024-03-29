@@ -8,16 +8,16 @@ from test.common import login_right, logout_right
 
 test_data = [
     (generate_data_all(6), generate_data_all(6), False),  # 随机整合数据
-    ("user1", "wrongpass", False),  # 错误的密码
-    ("wronguser", "pass1", False),  # 错误的用户名
-    # ("user1", "", False),  # 空密码
-    # ("", "pass1", False),  # 空用户名
-    # ("User1", "pass1", False),  # 用户名大小写敏感
-    # ("user1", "Pass1", False),  # 密码大小写敏感
-    # ("user1", "pass11", False),  # 密码太长
-    # ("user1", "pa", False),  # 密码太短
-    # ("@user1", "pass1", False),  # 用户名包含特殊字符
-    # ("user1", "!pass1", False),  # 密码包含特殊字符
+    # ("user1", "wrongpass", False),  # 错误的密码
+    # ("wronguser", "pass1", False),  # 错误的用户名
+    ("user1", "", False),  # 空密码
+    ("", "pass1", False),  # 空用户名
+    ("Admin1", "pass1", False),  # 用户名大小写敏感
+    ("user1", "Pass1", False),  # 密码大小写敏感
+    ("user1", "pass1wwwwwwwwwwwwwwwwwwwww1", False),  # 密码太长
+    ("user1", "paw", False),  # 密码太短
+    ("@user1", "pass1", False),  # 用户名包含特殊字符
+    ("user1", "!pass1", False),  # 密码包含特殊字符
     # ... 可以继续添加更多的测试数据
 ]
 
@@ -25,10 +25,9 @@ test_data = [
 @allure.feature("登录模块")
 @pytest.mark.parametrize("ip, user, password", start())
 class TestLogin:
-    # @allure.severity(allure.severity_level.CRITICAL)
-    @allure.story("正确登录-默认勾选记住")
+    @allure.story("正确用户名正确密码登录")
+    @allure.title("[web]正确登录-默认勾选记住")
     def test_login_right(self, driver, ip, user, password):
-        # telnet_reset_login(ip, 9900, user, password)
         start_case(driver, ip)
         login_right(driver, user, password)
 
@@ -36,7 +35,50 @@ class TestLogin:
         logout_right(driver)
         driver.close()
 
-    @allure.story("错误密码登录")
+    @allure.story("错误用户名错误密码登录")
+    @allure.title("[web]错误用户名错误密码登录")
+    def test_login_right(self, driver, ip, user, password):
+        start_case(driver, ip)
+        user = "admin1"
+        send_text(driver, By.ID, "login_username", user, "输入用户名: " + user)
+        password = "123456a"
+        send_text(driver, By.ID, "login_password", password, "输入密码: " + password)
+        click(driver, By.XPATH, "//*[contains(text(), '登 录')]", "点击登录")
+        check_text(driver, By.XPATH, '//*[@id="login_username"]', "")
+        check_text(driver, By.XPATH, '//*[@id="login_password"]', "")
+
+        # 恢复环境
+        driver.close()
+
+    @allure.story("错误用户名正确密码登录")
+    @allure.title("[web]错误用户名正确密码登录")
+    def test_login_right(self, driver, ip, user, password):
+        start_case(driver, ip)
+        user = "admin1"
+        send_text(driver, By.ID, "login_username", user, "输入用户名: " + user)
+        send_text(driver, By.ID, "login_password", password, "输入密码: " + password)
+        click(driver, By.XPATH, "//*[contains(text(), '登 录')]", "点击登录")
+        check_text(driver, By.XPATH, '//*[@id="login_username"]', "")
+        check_text(driver, By.XPATH, '//*[@id="login_password"]', "")
+        # 恢复环境
+        driver.close()
+
+    @allure.story("正确用户名错误密码登录")
+    @allure.title("[web]正确用户名错误密码登录")
+    def test_login_right(self, driver, ip, user, password):
+        start_case(driver, ip)
+        send_text(driver, By.ID, "login_username", user, "输入用户名: " + user)
+        password = "123456a"
+        send_text(driver, By.ID, "login_password", password, "输入密码: " + password)
+        click(driver, By.XPATH, "//*[contains(text(), '登 录')]", "点击登录")
+        check_text(driver, By.XPATH, '//*[@id="login_username"]', "")
+        check_text(driver, By.XPATH, '//*[@id="login_password"]', "")
+
+        # 恢复环境
+        driver.close()
+
+    @allure.story("随机生成用户名密码登录")
+    @allure.title("[web]错误密码登录")
     def test_login_wrong(self, driver, ip, user, password):
         start_case(driver, ip)
         click(driver, By.XPATH, "//span[contains(@class, 'anticon-eye-invisible')]", "点击显示密码")
@@ -56,6 +98,7 @@ class TestLogin:
         driver.close()
 
     @allure.story("退出登录-记住我")
+    @allure.title("[web]退出登录-记住我")
     def test_login_out_check_remember(self, driver, ip, user, password):
         start_case(driver, ip)
 
@@ -80,6 +123,7 @@ class TestLogin:
         driver.close()
 
     @allure.story("退出登录-不记住我")
+    @allure.title("[web]退出登录-不记住我")
     def test_login_out_check_not_remember(self, driver, ip, user, password):
         start_case(driver, ip)
 
@@ -97,6 +141,7 @@ class TestLogin:
         driver.close()
 
     @allure.story("登录界面-切换语言")
+    @allure.title("[web]登录界面-切换语言")
     def test_login_language(self, driver, ip, user, password):
         start_case(driver, ip)
         click(driver, By.XPATH, "//*[contains(text(), '简体中文')]", "登录界面点击语言")
@@ -111,6 +156,7 @@ class TestLogin:
         driver.close()
 
     @allure.story("登录后-切换语言")
+    @allure.title("[web]登录后-切换语言")
     def test_change_language(self, driver, ip, user, password):
         # 获取焦点
         # dropdown = driver.find_element(By.XPATH, '//*[@id="root"]/section/header//button/span[2]')

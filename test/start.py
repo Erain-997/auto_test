@@ -58,7 +58,7 @@ def driver(request):
 def start():
     # 优化成传参
     # todo 多设备操作
-    equipment = "out"
+    equipment = "in"
     arg = config_read()
     ip = arg.get(equipment, "ip")
     user = arg.get(equipment, "user")

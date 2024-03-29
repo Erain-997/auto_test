@@ -1,0 +1,22 @@
+<environment>
+    <parameter>
+        <key>Browser</key>
+        <value>Chrome</value>
+    </parameter>
+    <parameter>
+        <key>Browser.Version</key>
+        <value>111.0.5563.65</value>
+    </parameter>
+    <parameter>
+        <key>Env</key>
+        <value>Test</value>
+    </parameter>
+        <parameter>
+        <key>IP</key>
+        <value>192.168.1.133</value>
+    </parameter>
+        <parameter>
+        <key>Allure-Pytest.Version</key>
+        <value>2.8.12</value>
+    </parameter>
+</environment>

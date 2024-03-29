@@ -42,6 +42,7 @@ def get_report_url():
     ip = get_local_ip()
     port = find_available_port()
     log_info("本机ip: ", ip, port)
+    port = 5555
     open_cmd = "allure open -h " + ip + " -p " + str(port) + " ./reports"
     # open_cmd = "allure open -h 100.111.222.14 -p 4001 ./reports"
     # 使用 subprocess 执行命令并获取输出

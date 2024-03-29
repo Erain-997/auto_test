@@ -11,6 +11,7 @@ from test.start import *
 @pytest.mark.parametrize("ip, user, password", start())
 class TestGeneral:
     @allure.story("休眠时间")
+    @allure.title("[web]设置休眠时间")
     def test_sleep(self, driver, ip, user, password):
         start_case(driver, ip)
         model = login_right(driver, user, password)
@@ -33,11 +34,15 @@ class TestGeneral:
         driver.close()
 
     @allure.story("基础设置")
+    @allure.description("检查设备语言功能，并实际校验设备语言情况")
+    @allure.title("[web][设备]语言切换到中文简体")
+    @allure.feature("人工确认截图内容")
     def test_device_language(self, driver, ip, user, password):
         start_case(driver, ip)
         model = login_right(driver, user, password)
         click(driver, By.XPATH, '//li[2]/span', "点击常规设置->基础设置")
-        eee = click(driver, By.XPATH, "(//*[contains(text(), '简体中文')])[2]", "点击语言-简体中文")
+        # eee = click(driver, By.XPATH, "(//*[contains(text(), '简体中文')])[2]", "点击语言-简体中文")
+        click(driver, By.XPATH, '//*[@id="language"]//div[2]//div/span[2]', "点击语言下拉框")
         check_element_exist(driver, By.XPATH, "//*[contains(text(), '繁體中文')]", "检查下拉框元素-繁體中文")
         check_element_exist(driver, By.XPATH, "//*[contains(text(), 'עִברִית')]", "检查下拉框元素-עִברִית")
         check_element_exist(driver, By.XPATH, "//*[contains(text(), 'Deutsch')]", "检查下拉框元素-Deutsch")
@@ -52,8 +57,35 @@ class TestGeneral:
         # 容错， 等待生效
         time.sleep(2)
 
+        name = "检查设备语言为简体中文"
+        report_dir, poco = connect_devices_ip(name, ip)
+        time.sleep(1)
+        result = poco(text="呼叫").exists()
+        snapshot(filename=report_dir + "/{}.png".format(name), quality=99)
+        check_app_with_png(open(report_dir + "/{}.png".format(name), "rb").read(), report_dir, name, result)
+
+        click(driver, By.XPATH, "//*[contains(text(), 'English')]", "点击语言-English")
+        click(driver, By.XPATH, "(//*[contains(text(), '简体中文')])[2]", "点击切换成简体中文")
+        click(driver, By.XPATH, "(//*[contains(text(), '保存')])[2]", "点击语言-保存")
+        logout_right(driver)
+        driver.close()
+
+    @allure.story("基础设置")
+    @allure.description("检查设备语言功能，并实际校验设备语言情况")
+    @allure.title("[web][设备]语言切换到英语")
+    def test_device_language(self, driver, ip, user, password):
+        start_case(driver, ip)
+        model = login_right(driver, user, password)
+        click(driver, By.XPATH, '//li[2]/span', "点击常规设置->基础设置")
+        click(driver, By.XPATH, '//*[@id="language"]//div[2]//div/span[2]', "点击语言下拉框")
+        click(driver, By.XPATH, "//*[contains(text(), 'English')]", "点击切换成English")
+        click(driver, By.XPATH, "(//*[contains(text(), '保存')])[2]", "点击语言-保存")
+        # 容错， 等待生效
+        time.sleep(2)
+
         name = "检查设备语言为英语"
         report_dir, poco = connect_devices_ip(name, ip)
+        time.sleep(1)
         result = poco(text="Call").exists()
         snapshot(filename=report_dir + "/{}.png".format(name), quality=99)
         check_app_with_png(open(report_dir + "/{}.png".format(name), "rb").read(), report_dir, name, result)

@@ -2,19 +2,20 @@ from api.web import *
 from api.web.assert_tools import *
 from test.common import *
 from test.start import *
-from test import switch_status
+from test import switch_status, model_network_cloud
 
 
 @allure.feature("对讲设置-SIP")
 @pytest.mark.parametrize("ip, user, password", start())
 class TestSIP:
     @allure.story("SIP开关按钮")
+    @allure.title("[web]设置SIP开启/关闭")
     def test_SIP(self, driver, ip, user, password):
         start_case(driver, ip)
         model = login_right(driver, user, password)
-        # if model not in model_network_cloud:
-        #     allure.step("当前型号{},没有网络-云平台功能".format(model))
-        #     return
+        if model not in model_network_cloud:
+            allure.step("当前型号{},没有网络-云平台功能".format(model))
+            return
         click(driver, By.XPATH, "//*[contains(text(), '对讲设置')]", "点击对讲设置")
         click(driver, By.XPATH, "(//*[contains(text(), 'SIP')])[2]", "点击SIP")
         res = get_switch_status(driver, By.XPATH, '//*[@id="voip_enable"]', "SIP")

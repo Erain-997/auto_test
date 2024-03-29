@@ -18,18 +18,18 @@ def clear():
 if __name__ == '__main__':
     # todo 登录现在限制10个接口
     # 环境清理
-    clear()
+    # clear()
     # # 启动
     pytest.main(
         ['-s', '-v', '--capture=no', "--continue-on-collection-errors", '--alluredir=./allure-results',
-         "test/general/test_Basic.py", "--reruns", "0"])
+         "test/general/test_information.py", "--reruns", "1"])
     time.sleep(2)
     # 生成报告
     generate_report()
     time.sleep(2)
     # 获取报告地址
-    url = get_report_url()
-    print("目标网址: ", url)
+    # url = get_report_url()
+    # print("目标网址: ", url)
 
     # 钉钉推送 todo 优化模块名称
     # send_message_to_ding(url)
